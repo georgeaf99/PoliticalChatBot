@@ -4,6 +4,7 @@ from twilio.rest import TwilioRestClient
 import re
 import jsonpickle
 import sunlight
+from models import Customer, Model, CFields
 import messages
 
 # The session object makes use of a secret key.
@@ -22,25 +23,29 @@ def handle_sms():
     customer_phone_number = request.values["From"]
     text_message_body = request.values["Body"]
 
-    if re.match("I LIKE TURTLES", text_message_body, flags=re.IGNORECASE) is not None:
-        sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
+    # Get or create the customer
+    customer = Model.load_from_db(Customer, customer_phone_number)
 
-    # Check to see if the message was a HELP message
-    if re.match("^\s*HELP\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-        sms.send_msg(body=config.HELP_MESSAGE_1, to=customer_phone_number)
-        sms.send_msg(body=config.HELP_MESSAGE_2, to=customer_phone_number)
-        return jsonpickle.encode({"result": 0})
+    if customer is None:
+        customer = Customer.create_new({
+            CFields.PHONE_NUMBER: customer_phone_number
+        })
+        customer.create()
 
     # Check to see if the message was a REACHOUT message
-    if re.match("^s\*REACH\s?OUT\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-        emails = sunlight.get_email(firstname1, lastname1, firstname2, lastname2, firstname3, lastname3)
+    if re.match("^\s*REACH\s?OUT\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+        reps = (rep.split(' ') for rep in sunlight.get_reps(customer[CFields.ZIP_CODE]))
+
+        emails = sunlight.get_email(reps[0][0], reps[0][1], reps[1][0], reps[1][1], reps[2][0], reps[2][1])
+
         sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
 
-    # Send the customer a confirmation message if its the first message
-    if len(transaction[TFields.MESSAGES]) == 1:
-        sms.send_msg(body=config.CONFIRMATION_MESSAGE, to=customer_phone_number)
     # match zipcode
     elif re.match("^\d{5}(?:[-\s]\d{4})?$", text_message_body) is not None:
+        # Update the customer object
+        customer['zip_code'] = text_message_body
+        customer.save()
+
         reps=sunlight.get_reps(text_message_body)
         if len(reps) >= 3:
             sms.send_msg(body=messages.zipcode_response(reps[0],reps[1],reps[2]), to=customer_phone_number)

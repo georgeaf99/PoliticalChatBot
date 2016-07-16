@@ -20,7 +20,7 @@ dynamodb = boto.dynamodb2.connect_to_region(
                  aws_secret_access_key='IGxY2/cjqCS94I9gGJeyCdR+pGyZ8yLEGfJcf4v6')
 
 # Tables
-customers = Table("PolitiHack_Customers", connection=dynamodb)
+customers = Table("PolitiHack_Customers2", connection=dynamodb)
 
 # Use boolean for the tables
 customers.use_boolean()
@@ -42,7 +42,7 @@ class Model(object):
 
         item = None
         try:
-            item = cls(cls.TABLE.get_item(key, consistent=consistent))
+            item = cls(cls.TABLE.get_item(phone_number=key))
         except ItemNotFound:
             return None
 
@@ -93,7 +93,6 @@ class Model(object):
         return self.item.delete()
 
 class CFields():
-    UUID = "uuid"
     PHONE_NUMBER = "phone_number"
     ZIP_CODE = "zip_code"
 
@@ -101,7 +100,7 @@ class Customer(Model):
     FIELDS = CFields
     TABLE_NAME = "PolitiHack_Customers"
     TABLE = customers
-    KEY = CFields.UUID
+    KEY = CFields.PHONE_NUMBER
 
     def __init__(self, item):
         super(Customer, self).__init__(item)
@@ -109,6 +108,4 @@ class Customer(Model):
     @staticmethod
     def create_new(attributes={}):
         # Default Values
-        attributes[CFields.UUID] = str(uuid.uuid4())
-
         return Model.load_from_data(Customer, attributes)
