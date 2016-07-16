@@ -99,6 +99,8 @@ class Model(object):
 class CFields():
     PHONE_NUMBER = "phone_number"
     ZIP_CODE = "zip_code"
+    PROMPTED = "prompted"
+    BILL_ID = "bill_id"
 
 class Customer(Model):
     FIELDS = CFields

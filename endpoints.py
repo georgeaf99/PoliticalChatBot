@@ -55,14 +55,15 @@ def handle_sms():
 
         sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
     elif re.match("\s*GET\s?BILLS\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-        bills = None # TODO fill this in later
+        bill = sunlight.get_recent_bill()
 
         # save the customers state
         customer['prompted'] = True
+        customer['bill_id'] = bill['bill_id']
         customer.save()
 
         # Display the bills
-        # sms.send_msg(body=)
+        sms.send_msg(body=messages.bill(bill['summary_short'], bill['popular_title']))
 
         # Follow up on the bill
         sms.send_msg(body=messages.bill_followup())
