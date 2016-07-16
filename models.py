@@ -104,7 +104,7 @@ class Customer(Model):
     KEY = CFields.UUID
 
     def __init__(self, item):
-        super().__init__(item)
+        super(Customer, self).__init__(item)
 
     @staticmethod
     def create_new(attributes={}):
