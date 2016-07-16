@@ -42,7 +42,7 @@ class Model(object):
 
         item = None
         try:
-            item = cls(cls.TABLE.get_item(key))
+            item = cls(cls.TABLE.get_item(phone_number=key))
         except ItemNotFound:
             return None
 

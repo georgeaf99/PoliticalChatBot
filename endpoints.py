@@ -27,8 +27,8 @@ def handle_sms():
     customer = Model.load_from_db(Customer, customer_phone_number)
 
     if customer is None:
-        customer = models.Customer.create_new({
-            models.CFields.PHONE_NUMBER: customer_phone_number
+        customer = Customer.create_new({
+            CFields.PHONE_NUMBER: customer_phone_number
         })
         customer.create()
 
