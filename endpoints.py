@@ -3,7 +3,6 @@ import twilio.twiml
 from twilio.rest import TwilioRestClient
 import re
 import jsonpickle
-
 import messages
 
 # The session object makes use of a secret key.
@@ -25,11 +24,26 @@ def handle_sms():
     if re.match("I LIKE TURTLES", text_message_body, flags=re.IGNORECASE) is not None:
         sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
 
+    # Check to see if the message was a HELP message
+    if re.match("^\s*HELP\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+        sms.send_msg(body=config.HELP_MESSAGE_1, to=customer_phone_number)
+        sms.send_msg(body=config.HELP_MESSAGE_2, to=customer_phone_number)
+        return jsonpickle.encode({"result": 0})
+
+    # Check to see if the message was a REACHOUT message
+    if re.match("^s\*REACH\s?OUT\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+        emails = sunlight.get_email(firstname1, lastname1, firstname2, lastname2, firstname3, lastname3)
+        sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
+
+    # Send the customer a confirmation message if its the first message
+    if len(transaction[TFields.MESSAGES]) == 1:
+        sms.send_msg(body=config.CONFIRMATION_MESSAGE, to=customer_phone_number)
+
     return jsonpickle.encode({"result": 0})
 
 # HELPER CLASSES #
 
-class TwilioService:
+class TwilioService():
     def __init__(self, account_sid, auth_token):
         self.twilio = TwilioRestClient(account_sid, auth_token)
 
