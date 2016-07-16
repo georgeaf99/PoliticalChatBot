@@ -78,6 +78,7 @@ def handle_sms():
 
     elif re.match("^\s*STATS\s*$", text_message_body) is not None:
         # TODO: add implementation for stats.
+        pass
 
     return jsonpickle.encode({"result": 0})
 
