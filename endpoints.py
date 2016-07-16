@@ -1,7 +1,12 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, session
 import twilio.twiml
+from twilio.rest import TwilioRestClient
+import re
 
+# The session object makes use of a secret key.
+SECRET_KEY = 'a secret key'
 app = Flask(__name__)
+app.config.from_object(__name__)
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_monkey():
@@ -16,6 +21,14 @@ def handle_sms():
     customer_phone_number = request.values["From"]
     text_message_body = request.values["Body"]
 
+    counter = session.get('counter', 0)
+
+    # increment the counter
+    counter += 1
+
+    # Save the new counter value in the session
+    session['counter'] = counter
+
     # Check to see if the message was a HELP message
     if re.match("^\s*HELP\s*$", text_message_body, flags=re.IGNORECASE) is not None:
         sms.send_msg(body=config.HELP_MESSAGE_1, to=customer_phone_number)
@@ -23,16 +36,14 @@ def handle_sms():
         return jsonpickle.encode({"result": 0})
 
     # Send the customer a confirmation message if its the first message
-    if len(transaction[TFields.MESSAGES]) == 1:
-        sms.send_msg(body=config.CONFIRMATION_MESSAGE, to=customer_phone_number)
+    if counter == 1:
+        sms.send_msg(body="FIRST MESSAGE", to=customer_phone_number)
 
     return jsonpickle.encode({"result": 0})
 
 # HELPER CLASSES #
 
-sms = TwillioService('ACb5440a719947d5edf7d760155a39a768', 'dd9b4240a96556da1abb1e49646c73f3')
-
-class TwilioService(SmsService):
+class TwilioService:
     def __init__(self, account_sid, auth_token):
         self.twilio = TwilioRestClient(account_sid, auth_token)
 
@@ -45,6 +56,8 @@ class TwilioService(SmsService):
 
         for msg in sms_chunks:
             self.twilio.messages.create(body=msg, to=to, from_=from_)
+
+sms = TwilioService('ACb5440a719947d5edf7d760155a39a768', 'dd9b4240a96556da1abb1e49646c73f3')
 
 if __name__ == "__main__":
     app.run(debug=True)
