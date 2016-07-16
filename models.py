@@ -109,6 +109,6 @@ class Customer(Model):
     @staticmethod
     def create_new(attributes={}):
         # Default Values
-        attributes[CFields.UUID] = common.get_uuid()
+        attributes[Fields.UUID] = str(uuid.uuid4())
 
         return Model.load_from_data(Customer, attributes)
