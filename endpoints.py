@@ -27,7 +27,7 @@ def handle_sms():
     customer = Model.load_from_db(Customer, customer_phone_number)
 
     if customer is None:
-        sms.send_msg(body="Welcome to PolitiHack! Text us 'EXAMPLES' for a list of commands.")
+        sms.send_msg(body="Welcome to PolitiHack! Text us 'EXAMPLES' for a list of commands.", to=customer_phone_number)
 
         customer = Customer.create_new({
             CFields.PHONE_NUMBER: customer_phone_number
