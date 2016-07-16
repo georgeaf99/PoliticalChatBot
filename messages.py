@@ -13,8 +13,8 @@ def bill_followup():
 def bill_vote_response():
     return "Thanks for your feedback. If you feel strongly about this issue and would like to reach out directly to your representatives, reply 'Reach Out'"
 
-def reach_out():
-    return "Great! You can either respond directly to this message, or respond with 'Email' to get their emails. Otherwise type 'Cancel'"
+def reach_out(email1, email2, email3):
+    return "Great! Here are your representatives emails: {} \n {} \n {}".format(email1, email2, email3)
 
 def reach_out_response():
     return "Thanks for your feedback. We'll be sure to pass it along"
