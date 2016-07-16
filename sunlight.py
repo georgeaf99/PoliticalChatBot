@@ -15,16 +15,28 @@ def get_reps(zipcode):
 	return names
 
 def get_email(firstname1, lastname1, firstname2, lastname2, firstname3, lastname3):
-    url1 = "openstates.org/api/v1/legislators/?first_name=" + firstname1 +"&last_name=" + lastname1
-    url2 = "openstates.org/api/v1/legislators/?first_name=" + firstname2 + "&last_name=" + lastname2
-    url3 = "openstates.org/api/v1/legislators/?first_name=" + firstname3 + "&last_name=" + lastname3
+    url1 = "http://openstates.org/api/v1/legislators/?first_name=" + firstname1 +"&last_name=" + lastname1 + "&apikey=" + API_KEY
+    url2 = "http://openstates.org/api/v1/legislators/?first_name=" + firstname2 + "&last_name=" + lastname2 + "&apikey=" + API_KEY
+    url3 = "http://openstates.org/api/v1/legislators/?first_name=" + firstname3 + "&last_name=" + lastname3 + "&apikey=" + API_KEY
     emails = []
-    r1 = requests.get(url1)
-    emails.append(r1.json()['email']
-    r2 = requests.get(url2)
-    emails.append(r2.json()['email']
-    r3 = requests.get(url3)
-    emails.append(r3.json()['email']
+    r1 = requests.get(url1, verify=False)
+    if r1:
+        json1 = r1.json()
+        if json1:
+            emails.append(json1[0]['email'])
+        # emails += json1
+    r2 = requests.get(url2, verify=False)
+    if r2:
+        json2 = r2.json()
+        if json2:
+            emails.append(json2[0]['email'])
+        # emails += json2
+    r3 = requests.get(url3, verify=False)
+    if r3:
+        json3 = r3.json()
+        if json3:
+            emails.append(json3[0]['email'])
+        # emails += json3
     return emails
 
 def get_recent_bills():
