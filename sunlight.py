@@ -1,4 +1,5 @@
 import requests
+from random import randint
 
 BASE_URL='https://congress.api.sunlightfoundation.com'
 API_KEY='fabd1be914a141efbc8607435d2a18c0'
@@ -42,9 +43,11 @@ def get_email(firstname1, lastname1, firstname2, lastname2, firstname3, lastname
 def get_recent_bill():
 	url=BASE_URL+BILLS_PATH+"?history.house_passage_result__exists=true&order=history.house_passage_result_at&summary_short__exists=true&popular_title__exists=true&fields=bill_id,summary_short,popular_title"+"&apikey="+API_KEY
 	r=requests.get(url)
-	result = r.json()['results'][0]
-	summary = result['summary_short'].split('\n\n',1)[1]
-	result['summary_short'] = (summary[:500] + '..') if len(summary) > 75 else summary
+	results = r.json()['results']
+	choice = randint(0, min(len(results),15))
+	result = results[choice]
+	summary = result['summary_short']
+	result['summary_short'] = (summary[:500] + '..') if len(summary) > 500 else summary
 	return result
 
 def get_reps_object(zipcode):
