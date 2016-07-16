@@ -32,15 +32,6 @@ def handle_sms():
         })
         customer.create()
 
-    if re.match("I LIKE TURTLES", text_message_body, flags=re.IGNORECASE) is not None:
-        sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
-
-    # Check to see if the message was a HELP message
-    if re.match("^\s*HELP\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-        sms.send_msg(body=config.HELP_MESSAGE_1, to=customer_phone_number)
-        sms.send_msg(body=config.HELP_MESSAGE_2, to=customer_phone_number)
-        return jsonpickle.encode({"result": 0})
-
     # Check to see if the message was a REACHOUT message
     if re.match("^s\*REACH\s?OUT\s*$", text_message_body, flags=re.IGNORECASE) is not None:
         emails = sunlight.get_email(firstname1, lastname1, firstname2, lastname2, firstname3, lastname3)
