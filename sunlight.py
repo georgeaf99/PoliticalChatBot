@@ -59,7 +59,10 @@ def get_reps_object(zipcode):
 def get_votes_by_congressman(zipcode):
 	results = get_reps_object(zipcode)
 	results = [ x['bioguide_id'] for x in results ]
-	results = [ BASE_URL+"/votes?voter_ids." + x + "__exists=true"+"&fields=voter_ids"+"&apikey="+API_KEY for x in results ]
+	results = [ BASE_URL+"/votes?fields=voter_ids." + x + "&apikey="+API_KEY for x in results ]
 	results = [ requests.get(url).json()['results'] for url in results ]
-	return [ votes[0] for votes in results ]
-	# return [ [inner['voters'] for inner in result] for result in results ]
+	final_list =  [ [dope['voter_ids'] for dope in votes] for votes in results ]
+	d = {}
+	for x in final_list:
+		d.update(x)
+	return d

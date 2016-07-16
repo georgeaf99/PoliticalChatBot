@@ -133,8 +133,25 @@ class Vote(Model):
     def create_new(attributes={}):
         return Model.load_from_data(Vote, attributes)
 
+def equality_helper(person, congress):
+    if person and congress is "Yay" or not person and congress is not "Yay":
+        return True
+    return False
+
 def get_stats(phone_number):
-    total_yes, total_no = 0, 0
-    for item in votes.scan():
-        if item.split("_")[0] == phone_number:
-            bill_id = item.split("_")[0]
+    voted_same = 0
+    total_votes = 0
+    customer = Model.load_from_db(Customer, phone_number)
+    if customer.get(CFields.ZIP_CODE) is not None:
+        congress_votes = sunlight.get_votes_by_congressman(customer[CFields.ZIP_CODE])
+        for item in votes.scan():
+            if item[VFields.PHONE_NUMBER_AND_BILL_ID].split("_")[0] == phone_number:
+                bill_id = item.split("_")[0]
+                if congress_votes.get(bill_id) is not None:
+                    if equality_helper(item[VFields.VOTED_YES], congress_votes.get(bill_id)):
+                        voted_same += 1
+                    total_votes += 1
+
+    if total_votes != 0:
+        return voted_same / total_votes
+    return -1

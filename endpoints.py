@@ -40,14 +40,19 @@ def handle_sms():
         customer.save()
 
         if re.match("^\s*YES\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-            # TODO: Save votes
+            #TODO: finish this shit
+            Vote.create_new({
+                VFields.PHONE_NUMBER_AND_BILL_ID: customer[CFields.PHONE_NUMBER + "_" + # add bill id]
+            }).create()
+
             sms.send_msg(body=messages.bill_vote_response(), to=customer_phone_number)
         elif re.match("^\s*NO\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-            # TODO: Save votes
+            # TODO: Finish this shit
+            Vote.create_new({
+                VFields.PHONE_NUMBER_AND_BILL_ID: customer[CFields.PHONE_NUMBER + "_" + # add bill id]
+            }).create()
+
             sms.send_msg(body=messages.bill_vote_response(), to=customer_phone_number)
-        elif re.match("^\s*MORE INFORMATION\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-            # TODO: Return whole bill summary
-            pass
 
     if re.match("^\s*EXAMPLE(S)?\s*$", text_message_body, flags=re.IGNORECASE) is not None:
         sms.send_msg(body="Commands: your zip code, GET BILLS, REACH OUT, STATS", to=customer_phone_number)
@@ -85,8 +90,11 @@ def handle_sms():
             sms.send_msg(body=messages.zipcode_response(reps[0],reps[1],reps[2]), to=customer_phone_number)
 
     elif re.match("^\s*STATS\s*$", text_message_body) is not None:
-        # TODO: add implementation for stats.
-        pass
+        stats = model.get_stats(customer_phone_number)
+        if stats != -1:
+            sms.send_msg(body=messages.canidate_analytics(stats), to=customer_phone_number)
+        else
+            sms.send_msg(body="We're sorry... we don't have stats for you at this time. Keep voting on bills", to=customer_phone_number)
     else:
         if re.match("^\s*YES\s*$", text_message_body, flags=re.IGNORECASE) is None and \
                 re.match("^\s*NO\s*$", text_message_body, flags=re.IGNORECASE) is None:
