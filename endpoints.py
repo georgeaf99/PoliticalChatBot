@@ -50,7 +50,7 @@ def handle_sms():
             pass
 
     if re.match("^\s*EXAMPLE(S)?\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-        sms.send_msg(body="Commands: GET BILLS, REACH OUT, your zip code, STATS", to=customer_phone_number)
+        sms.send_msg(body="Commands: your zip code, GET BILLS, REACH OUT, STATS", to=customer_phone_number)
     # Check to see if the message was a REACHOUT message
     elif re.match("^\s*REACH\s?OUT\s*$", text_message_body, flags=re.IGNORECASE) is not None:
         reps = [rep.split(' ') for rep in sunlight.get_reps(customer[CFields.ZIP_CODE])]
@@ -84,6 +84,8 @@ def handle_sms():
     elif re.match("^\s*STATS\s*$", text_message_body) is not None:
         # TODO: add implementation for stats.
         pass
+    else:
+        sms.send_msg(body="Commands: your zip code, GET BILLS, REACH OUT, STATS", to=customer_phone_number)
 
     return jsonpickle.encode({"result": 0})
 
