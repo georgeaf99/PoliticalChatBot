@@ -85,7 +85,7 @@ def handle_sms():
         # TODO: add implementation for stats.
         pass
     else:
-        if re.match("^\s*YES\s*$", text_message_body, flags=re.IGNORECASE) is not None and
+        if re.match("^\s*YES\s*$", text_message_body, flags=re.IGNORECASE) is not None and \
                 re.match("^\s*NO\s*$", text_message_body, flags=re.IGNORECASE) is not None:
             # TODO: Save votes
             sms.send_msg(body="Commands: your zip code, GET BILLS, REACH OUT, STATS", to=customer_phone_number)
