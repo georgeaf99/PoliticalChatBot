@@ -1,6 +1,5 @@
 def intro_message():
-    return "Welcome to PolitiHack, a simple service to keep you involved in democracy." +
-    "Please reply with your zipcode to begin."
+    return "Welcome to PolitiHack, a simple service to keep you involved in democracy. Please reply with your zipcode to begin."
 
 def zipcode_response(congressman, senator1, senator2):
     return "Your representatives are: \n {} \n {} \n {}".format(congressman, senator1, senator2)
