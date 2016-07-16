@@ -36,9 +36,6 @@ def handle_sms():
         emails = sunlight.get_email(firstname1, lastname1, firstname2, lastname2, firstname3, lastname3)
         sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
 
-    # Send the customer a confirmation message if its the first message
-    if len(transaction[TFields.MESSAGES]) == 1:
-        sms.send_msg(body=config.CONFIRMATION_MESSAGE, to=customer_phone_number)
     # match zipcode
     elif re.match("^\d{5}(?:[-\s]\d{4})?$", text_message_body) is not None:
         reps=sunlight.get_reps(text_message_body)
