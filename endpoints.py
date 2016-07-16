@@ -34,7 +34,10 @@ def handle_sms():
 
     # Check to see if the message was a REACHOUT message
     if re.match("^\s*REACH\s?OUT\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-        emails = sunlight.get_email(firstname1, lastname1, firstname2, lastname2, firstname3, lastname3)
+        reps = [rep.split(' ') for rep in sunlight.get_reps(customer[CFields.ZIP_CODE])]
+
+        emails = sunlight.get_email(reps[0][0], reps[0][1], reps[1][0], reps[1][1], reps[2][0], reps[2][1])
+
         sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
 
     # match zipcode
