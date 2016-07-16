@@ -118,7 +118,7 @@ class VFields():
     PHONE_NUMBER_AND_BILL_ID = "phone_number_and_bill_id"
     VOTED_YES = "voted_yes"
 
-class Vote(object):
+class Vote(Model):
     FIELDS = VFields
     TABLE_NAME = "PolitiHack_Votes"
     TABLE = votes
