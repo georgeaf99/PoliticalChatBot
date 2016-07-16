@@ -21,3 +21,6 @@ def election_update():
 
 def canidate_analytics(candidate_name, agree_percent):
     "{} You have agreed on {} of bills presented to you".format(candidate_name, agree_percent)
+
+def no_email():
+    "Your congressmen do not have contact information."

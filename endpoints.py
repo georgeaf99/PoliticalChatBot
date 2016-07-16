@@ -57,7 +57,10 @@ def handle_sms():
 
         emails = sunlight.get_email(reps[0][0], reps[0][1], reps[1][0], reps[1][1], reps[2][0], reps[2][1])
 
-        sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
+        if emails:
+            sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
+        else:
+            sms.send_msg(body=messages.no_email, to=customer_phone_number)
     elif re.match("\s*GET\s?BILLS\s*$", text_message_body, flags=re.IGNORECASE) is not None:
         bill = sunlight.get_recent_bill()
 
