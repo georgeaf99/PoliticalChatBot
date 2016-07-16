@@ -3,6 +3,7 @@ import twilio.twiml
 from twilio.rest import TwilioRestClient
 import re
 import jsonpickle
+import sunlight
 
 import messages
 
@@ -24,6 +25,12 @@ def handle_sms():
 
     if re.match("I LIKE TURTLES", text_message_body, flags=re.IGNORECASE) is not None:
         sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
+
+    # match zipcode
+    elif re.match("^\d{5}(?:[-\s]\d{4})?$", text_message_body) is not None:
+        reps=sunlight.get_reps(text_message_body)
+        if len(reps) >= 3:
+            sms.send_msg(body=messages.zipcode_response(reps[0],reps[1],reps[2]), to=customer_phone_number)
 
     return jsonpickle.encode({"result": 0})
 

@@ -5,7 +5,7 @@ API_KEY='fabd1be914a141efbc8607435d2a18c0'
 LEG_LOCATE_PATH='/legislators/locate'
 BILLS_PATH='/bills'
 
-def get_congressmen(zipcode):
+def get_reps(zipcode):
 	url=BASE_URL+LEG_LOCATE_PATH+"?zip="+zipcode+"&apikey="+API_KEY
 	r=requests.get(url)
 	results = r.json()['results']
@@ -20,3 +20,4 @@ def get_recent_bills():
 	r=requests.get(url)
 	results = r.json()['results']
 	return results[0:10]
+
