@@ -26,7 +26,7 @@ customers = Table("PolitiHack_Customers", connection=dynamodb)
 customers.use_boolean()
 
 # Base class for all object models
-class Model():
+class Model(object):
     def __init__(self, item):
         self.item = item
 
@@ -42,7 +42,7 @@ class Model():
 
         item = None
         try:
-            item = cls(cls.TABLE.get_item(consistent=consistent, key))
+            item = cls(cls.TABLE.get_item(key, consistent=consistent))
         except ItemNotFound:
             return None
 
@@ -109,6 +109,6 @@ class Customer(Model):
     @staticmethod
     def create_new(attributes={}):
         # Default Values
-        attributes[Fields.UUID] = str(uuid.uuid4())
+        attributes[CFields.UUID] = str(uuid.uuid4())
 
         return Model.load_from_data(Customer, attributes)
