@@ -118,15 +118,15 @@ class VFields():
     PHONE_NUMBER_AND_BILL_ID = "phone_number_and_bill_id"
     VOTED_YES = "voted_yes"
 
-class Votes():
+class Vote(object):
     FIELDS = VFields
     TABLE_NAME = "PolitiHack_Votes"
     TABLE = votes
     KEY = CFields.PHONE_NUMBER
 
     def __init__(self, item):
-        super(Votes, self).__init__(item)
+        super(Vote, self).__init__(item)
 
     @staticmethod
     def create_new(attributes={}):
-        return Model.load_from_data(Votes, attributes)
+        return Model.load_from_data(Vote, attributes)
