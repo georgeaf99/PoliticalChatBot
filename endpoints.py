@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, session
 import twilio.twiml
 from twilio.rest import TwilioRestClient
 import re
+import jsonpickle
 
 import messages
 
@@ -21,10 +22,8 @@ def handle_sms():
     customer_phone_number = request.values["From"]
     text_message_body = request.values["Body"]
 
-    # Check to see if the message was a HELP message
-    if re.match("^\s*HELP\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+    if re.match("I LIKE TURTLES", text_message_body, flags=re.IGNORECASE) is not None:
         sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
-        return jsonpickle.encode({"result": 0})
 
     return jsonpickle.encode({"result": 0})
 
