@@ -23,7 +23,7 @@ def handle_sms():
     text_message_body = request.values["Body"]
 
     if re.match("I LIKE TURTLES", text_message_body, flags=re.IGNORECASE) is not None:
-        sms.send_msg(body=message.intro_message(), to=customer_phone_number)
+        sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
 
     return jsonpickle.encode({"result": 0})
 
