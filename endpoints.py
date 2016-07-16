@@ -32,7 +32,7 @@ def handle_sms():
 
 sms = TwillioService('ACb5440a719947d5edf7d760155a39a768', 'dd9b4240a96556da1abb1e49646c73f3')
 
-class TwilioService(SmsService)
+class TwilioService(SmsService):
     def __init__(self, account_sid, auth_token):
         self.twilio = TwilioRestClient(account_sid, auth_token)
 
