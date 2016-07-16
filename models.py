@@ -9,7 +9,6 @@ import jsonpickle
 import time
 import json
 import uuid
-from enum import Enum, unique
 
 ##############################
 # Global vars, consts, extra #
