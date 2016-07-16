@@ -38,10 +38,13 @@ def handle_sms():
         customer.save()
 
         if re.match("^\s*YES\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-            pass
+            # TODO: Save votes
+            sms.send_msg(body=messages.bill_vote_response(), to=customer_phone_number)
         elif re.match("^\s*NO\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-            pass
+            # TODO: Save votes
+            sms.send_msg(body=messages.bill_vote_response(), to=customer_phone_number)
         elif re.match("^\s*MORE INFORMATION\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+            # TODO: Return whole bill summary
             pass
 
     # Check to see if the message was a REACHOUT message
