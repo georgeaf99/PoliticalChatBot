@@ -32,6 +32,18 @@ def handle_sms():
         })
         customer.create()
 
+    # Check to see if the customer was prompted
+    if customer['prompted']:
+        customer['prompted'] = False
+        customer.save()
+
+        if re.match("^\s*YES\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+            pass
+        elif re.match("^\s*NO\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+            pass
+        elif re.match("^\s*MORE INFORMATION\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+            pass
+
     # Check to see if the message was a REACHOUT message
     if re.match("^\s*REACH\s?OUT\s*$", text_message_body, flags=re.IGNORECASE) is not None:
         reps = [rep.split(' ') for rep in sunlight.get_reps(customer[CFields.ZIP_CODE])]
@@ -39,7 +51,18 @@ def handle_sms():
         emails = sunlight.get_email(reps[0][0], reps[0][1], reps[1][0], reps[1][1], reps[2][0], reps[2][1])
 
         sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
+    elif re.match("\s*GET\s?BILLS\s*$", text_message_body, flags=re.IGNORECASE) is not None:
+        bills = None # TODO fill this in later
 
+        # save the customers state
+        customer['prompted'] = True
+        customer.save()
+
+        # Display the bills
+        # sms.send_msg(body=)
+
+        # Follow up on the bill
+        sms.send_msg(body=messages.bill_followup())
     # match zipcode
     elif re.match("^\d{5}(?:[-\s]\d{4})?$", text_message_body) is not None:
         # Update the customer object

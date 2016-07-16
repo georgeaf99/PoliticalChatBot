@@ -21,6 +21,7 @@ dynamodb = boto.dynamodb2.connect_to_region(
 
 # Tables
 customers = Table("PolitiHack_Customers2", connection=dynamodb)
+votes = Table("PolitiHack_Votes", connection=dynamodb)
 
 # Use boolean for the tables
 customers.use_boolean()
@@ -42,7 +43,10 @@ class Model(object):
 
         item = None
         try:
-            item = cls(cls.TABLE.get_item(phone_number=key))
+            if cls == Customer:
+                item = cls(cls.TABLE.get_item(phone_number=key))
+            else:
+                item = cls(cls.TABLE.get_item(phone_number_and_bill_id=key))
         except ItemNotFound:
             return None
 
@@ -109,3 +113,20 @@ class Customer(Model):
     def create_new(attributes={}):
         # Default Values
         return Model.load_from_data(Customer, attributes)
+
+class VFields():
+    PHONE_NUMBER_AND_BILL_ID = "phone_number_and_bill_id"
+    VOTED_YES = "voted_yes"
+
+class Votes():
+    FIELDS = VFields
+    TABLE_NAME = "PolitiHack_Votes"
+    TABLE = votes
+    KEY = CFields.PHONE_NUMBER
+
+    def __init__(self, item):
+        super(Votes, self).__init__(item)
+
+    @staticmethod
+    def create_new(attributes={}):
+        return Model.load_from_data(Votes, attributes)
