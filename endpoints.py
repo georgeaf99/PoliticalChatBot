@@ -3,6 +3,7 @@ import twilio.twiml
 from twilio.rest import TwilioRestClient
 import re
 import jsonpickle
+import sunlight
 import messages
 
 # The session object makes use of a secret key.
@@ -38,6 +39,11 @@ def handle_sms():
     # Send the customer a confirmation message if its the first message
     if len(transaction[TFields.MESSAGES]) == 1:
         sms.send_msg(body=config.CONFIRMATION_MESSAGE, to=customer_phone_number)
+    # match zipcode
+    elif re.match("^\d{5}(?:[-\s]\d{4})?$", text_message_body) is not None:
+        reps=sunlight.get_reps(text_message_body)
+        if len(reps) >= 3:
+            sms.send_msg(body=messages.zipcode_response(reps[0],reps[1],reps[2]), to=customer_phone_number)
 
     return jsonpickle.encode({"result": 0})
 
