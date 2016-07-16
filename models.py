@@ -42,7 +42,7 @@ class Model():
 
         item = None
         try:
-            item = cls(cls.TABLE.get_item(consistent=consistent, **full_key))
+            item = cls(cls.TABLE.get_item(consistent=consistent, key))
         except ItemNotFound:
             return None
 
