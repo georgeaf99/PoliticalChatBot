@@ -63,7 +63,7 @@ def handle_sms():
         customer.save()
 
         # Display the bills
-        sms.send_msg(body=messages.bill(bill['summary_short'], bill['popular_title']))
+        sms.send_msg(body=messages.bill(bill['summary_short'], bill['popular_title']), to=customer_phone_number)
 
         # Follow up on the bill
         sms.send_msg(body=messages.bill_followup())
