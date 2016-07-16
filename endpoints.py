@@ -1,9 +1,15 @@
-import flask
+from flask import Flask, request, redirect
+import twilio.twiml
 
-from flask import request
+app = Flask(__name__)
 
-app = flask.Flask(__name__)
+@app.route("/", methods=['GET', 'POST'])
+def hello_monkey():
+    """Respond to incoming calls with a simple text message."""
 
-@app.route('/')
-def index():
-    return "PoliticalChatBot is up and running!"
+    resp = twilio.twiml.Response()
+    resp.message("Hello, Mobile Monkey")
+    return str(resp)
+
+if __name__ == "__main__":
+    app.run(debug=True)
