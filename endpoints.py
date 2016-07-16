@@ -60,7 +60,7 @@ def handle_sms():
         if emails:
             sms.send_msg(body=messages.reach_out(emails[0], emails[1], emails[2]), to=customer_phone_number)
         else:
-            sms.send_msg(body=messages.no_email, to=customer_phone_number)
+            sms.send_msg(body="Your congressmen do not have contact information!", to=customer_phone_number)
     elif re.match("\s*GET\s?BILLS\s*$", text_message_body, flags=re.IGNORECASE) is not None:
         bill = sunlight.get_recent_bill()
 
