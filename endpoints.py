@@ -4,6 +4,7 @@ from twilio.rest import TwilioRestClient
 import re
 import jsonpickle
 import sunlight
+from models import Customer, Model, CFields
 import messages
 
 # The session object makes use of a secret key.
@@ -22,6 +23,15 @@ def handle_sms():
     customer_phone_number = request.values["From"]
     text_message_body = request.values["Body"]
 
+    # Get or create the customer
+    customer = Model.load_from_db(Customer, customer_phone_number)
+
+    if customer is None:
+        customer = models.Customer.create_new({
+            models.CFields.PHONE_NUMBER: customer_phone_number
+        })
+        customer.create()
+
     if re.match("I LIKE TURTLES", text_message_body, flags=re.IGNORECASE) is not None:
         sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
 
@@ -38,6 +48,10 @@ def handle_sms():
 
     # match zipcode
     elif re.match("^\d{5}(?:[-\s]\d{4})?$", text_message_body) is not None:
+        # Update the customer object
+        customer['zip_code'] = text_message_body
+        customer.save()
+
         reps=sunlight.get_reps(text_message_body)
         if len(reps) >= 3:
             sms.send_msg(body=messages.zipcode_response(reps[0],reps[1],reps[2]), to=customer_phone_number)
