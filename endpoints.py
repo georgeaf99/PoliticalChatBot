@@ -3,10 +3,10 @@ import twilio.twiml
 from twilio.rest import TwilioRestClient
 import re
 
+import messages
+
 # The session object makes use of a secret key.
-SECRET_KEY = 'a secret key'
 app = Flask(__name__)
-app.config.from_object(__name__)
 
 @app.route("/", methods=['GET', 'POST'])
 def hello_monkey():
@@ -21,23 +21,10 @@ def handle_sms():
     customer_phone_number = request.values["From"]
     text_message_body = request.values["Body"]
 
-    counter = session.get('counter', 0)
-
-    # increment the counter
-    counter += 1
-
-    # Save the new counter value in the session
-    session['counter'] = counter
-
     # Check to see if the message was a HELP message
     if re.match("^\s*HELP\s*$", text_message_body, flags=re.IGNORECASE) is not None:
-        sms.send_msg(body=config.HELP_MESSAGE_1, to=customer_phone_number)
-        sms.send_msg(body=config.HELP_MESSAGE_2, to=customer_phone_number)
+        sms.send_msg(body=messages.intro_message(), to=customer_phone_number)
         return jsonpickle.encode({"result": 0})
-
-    # Send the customer a confirmation message if its the first message
-    if counter == 1:
-        sms.send_msg(body="FIRST MESSAGE", to=customer_phone_number)
 
     return jsonpickle.encode({"result": 0})
 
