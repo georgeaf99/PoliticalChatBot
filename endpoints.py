@@ -63,10 +63,10 @@ def handle_sms():
         customer.save()
 
         # Display the bills
-        sms.send_msg(body=messages.bill(bill['summary_short'], bill['popular_title']), to=customer_phone_number)
+        sms.send_msg(body=messages.bill(bill['popular_title'], bill['summary_short']), to=customer_phone_number)
 
         # Follow up on the bill
-        sms.send_msg(body=messages.bill_followup())
+        sms.send_msg(body=messages.bill_followup(), to=customer_phone_number)
     # match zipcode
     elif re.match("^\d{5}(?:[-\s]\d{4})?$", text_message_body) is not None:
         # Update the customer object
