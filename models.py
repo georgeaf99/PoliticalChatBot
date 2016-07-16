@@ -132,3 +132,9 @@ class Vote(Model):
     @staticmethod
     def create_new(attributes={}):
         return Model.load_from_data(Vote, attributes)
+
+def get_stats(phone_number):
+    total_yes, total_no = 0, 0
+    for item in votes.scan():
+        if item.split("_")[0] == phone_number:
+            bill_id = item.split("_")[0]
