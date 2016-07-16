@@ -4,11 +4,10 @@ BASE_URL='https://congress.api.sunlightfoundation.com'
 API_KEY='fabd1be914a141efbc8607435d2a18c0'
 LEG_LOCATE_PATH='/legislators/locate'
 BILLS_PATH='/bills'
+OPEN_STATES_PATH="openstates.org/api/v1/legislators/"
 
 def get_reps(zipcode):
-	url=BASE_URL+LEG_LOCATE_PATH+"?zip="+zipcode+"&apikey="+API_KEY
-	r=requests.get(url)
-	results = r.json()['results']
+	results = get_reps_object(zipcode)
 	names=[]
 	for congressmen in results:
 		name=congressmen['first_name']+' '+congressmen['last_name']
@@ -32,3 +31,16 @@ def get_recent_bills():
 	results = r.json()['results']
 	return results[0:10]
 
+def get_reps_object(zipcode):
+	url=BASE_URL+LEG_LOCATE_PATH+"?zip="+zipcode+"&apikey="+API_KEY
+	r=requests.get(url)
+	results = r.json()['results']
+	return results
+
+def get_votes_by_congressman(zipcode):
+	results = get_reps_object(zipcode)
+	results = [ x['bioguide_id'] for x in results ]
+	results = [ BASE_URL+"/votes?voter_ids." + x + "__exists=true"+"&fields=voter_ids"+"&apikey="+API_KEY for x in results ]
+	results = [ requests.get(url).json()['results'] for url in results ]
+	return [ votes[0] for votes in results ]
+	# return [ [inner['voters'] for inner in result] for result in results ]

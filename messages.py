@@ -16,9 +16,6 @@ def bill_vote_response():
 def reach_out(email1, email2, email3):
     return "Great! Here are your representatives emails: {} \n {} \n {}".format(email1, email2, email3)
 
-def reach_out_response():
-    return "Thanks for your feedback. We'll be sure to pass it along"
-
 def election_update():
     return "An election is upcoming in your area. Here is how your opinions align with the candidates:"
 

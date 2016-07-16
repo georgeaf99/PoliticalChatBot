@@ -47,6 +47,9 @@ def handle_sms():
         if len(reps) >= 3:
             sms.send_msg(body=messages.zipcode_response(reps[0],reps[1],reps[2]), to=customer_phone_number)
 
+    elif re.match("^\s*STATS\s*$", text_message_body) is not None:
+        # TODO: add implementation for stats.
+
     return jsonpickle.encode({"result": 0})
 
 # HELPER CLASSES #
