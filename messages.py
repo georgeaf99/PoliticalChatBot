@@ -20,7 +20,7 @@ def election_update():
     return "An election is upcoming in your area. Here is how your opinions align with the candidates:"
 
 def canidate_analytics(candidate_name, agree_percent):
-    "{} You have agreed on {} of bills presented to you".format(candidate_name, agree_percent)
+    return "{} You have agreed on {} of bills presented to you".format(candidate_name, agree_percent)
 
 def no_email():
-    "Your congressmen do not have contact information."
+    return "Your congressmen do not have contact information."
